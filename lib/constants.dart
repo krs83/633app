@@ -5,4 +5,5 @@ const add = 'Добавить';
 const del = 'Удалить';
 const cancel = 'Отмена';
 const newPlate = 'Новый номер';
+const search = 'Поиск';
 const tablePadding = 10;
