@@ -114,11 +114,13 @@ class _StartScreenState extends State<StartScreen> {
     if (result == null || result.trim().isEmpty) return;
 
     final addPlate = await insertPlate(normalizePlate(result.trim()));
+    if (!mounted) return;
+
     if (addPlate == null) {
-      if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(isPlateExist);
+      ScaffoldMessenger.of(context).showSnackBar(plateExistText);
       return;
     }
+    ScaffoldMessenger.of(context).showSnackBar(plateAddedText);
     await _loadPlates();
   }
 
@@ -134,62 +136,75 @@ class _StartScreenState extends State<StartScreen> {
   Widget build(BuildContext context) {
     final visible = _visiblePlates;
 
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: Center(
-          child: Row(
-            mainAxisAlignment: .center,
-            children: [
-              Text(widget.title),
-              SizedBox(width: 20),
-              Icon(Icons.directions_car),
-            ],
+    return PopScope(
+      onPopInvokedWithResult: (didPop, _) {
+        if (didPop) return;
+
+        if (_searchQuery.isNotEmpty) {
+          setState(() {
+            _searchQuery = '';
+          });
+        } else {
+          Navigator.of(context).pop();
+        }
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+          title: Center(
+            child: Row(
+              mainAxisAlignment: .center,
+              children: [
+                Text(widget.title),
+                SizedBox(width: 20),
+                Icon(Icons.directions_car),
+              ],
+            ),
           ),
         ),
-      ),
-      body: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: TextField(
-              onChanged: (v) => setState(() => _searchQuery = v),
-              decoration: const InputDecoration(
-                hintText: search,
-                prefixIcon: Icon(Icons.search),
-                border: OutlineInputBorder(),
-              ),
-            ),
-          ),
-          Expanded(
-            child: ListView.separated(
-              itemCount: visible.length,
-              itemBuilder: (context, i) => ListTile(
-                title: Text(
-                  '${(i + 1).toString().padRight(tablePadding)}${visible[i]}',
+        body: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: TextField(
+                onChanged: (v) => setState(() => _searchQuery = v),
+                decoration: const InputDecoration(
+                  hintText: search,
+                  prefixIcon: Icon(Icons.search),
+                  border: OutlineInputBorder(),
                 ),
-                onLongPress: () => _confirmDelete(visible[i]),
               ),
-              separatorBuilder: (BuildContext context, int index) =>
-                  const Divider(height: 1),
             ),
-          ),
-        ],
-      ),
-      floatingActionButton: Row(
-        mainAxisAlignment: .end,
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Button(
-              tip: 'Поиск',
-              onPressed: () {
-                _addCarPlate();
-              },
-              iconButton: Icons.add,
+            Expanded(
+              child: ListView.separated(
+                itemCount: visible.length,
+                itemBuilder: (context, i) => ListTile(
+                  title: Text(
+                    '${(i + 1).toString().padRight(tablePadding)}${visible[i]}',
+                  ),
+                  onLongPress: () => _confirmDelete(visible[i]),
+                ),
+                separatorBuilder: (BuildContext context, int index) =>
+                    const Divider(height: 1),
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
+        floatingActionButton: Row(
+          mainAxisAlignment: .end,
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Button(
+                tip: 'Поиск',
+                onPressed: () {
+                  _addCarPlate();
+                },
+                iconButton: Icons.add,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

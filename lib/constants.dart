@@ -9,4 +9,11 @@ const cancel = 'Отмена';
 const newPlate = 'Новый номер';
 const search = 'Поиск';
 const tablePadding = 10;
-const isPlateExist = SnackBar(content: Text('Такой номер уже есть!'));
+const plateExistText = SnackBar(
+  content: Text('Такой номер уже есть!'),
+  backgroundColor: Colors.red,
+);
+const plateAddedText = SnackBar(
+  content: Text('Номер добавлен'),
+  backgroundColor: Colors.green,
+);
