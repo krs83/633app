@@ -28,6 +28,17 @@ class _StartScreenState extends State<StartScreen> {
     setState(() => carPlates = plates);
   }
 
+  String formatSearchQuery(String raw) {
+    // Убираем всё, кроме букв, к верхнему регистру
+    final s = raw.toUpperCase().replaceAll(RegExp(r'[^А-Я]'), '');
+
+    if (s.isEmpty) return '';
+    if (s.length == 1) return s; // 'А' → 'А'
+
+    // Первая буква + пробел + остальное
+    return '${s[0]} ${s.substring(1)}';
+  }
+
   String normalizePlate(String raw) {
     final s = raw.trim().toUpperCase();
 
@@ -125,7 +136,7 @@ class _StartScreenState extends State<StartScreen> {
   }
 
   List<String> get _visiblePlates {
-    final query = _searchQuery.trim().toUpperCase();
+    final query = formatSearchQuery(_searchQuery);
     if (query.isEmpty) return [...carPlates]..sort();
 
     return carPlates.where((p) => p.toUpperCase().startsWith(query)).toList()
