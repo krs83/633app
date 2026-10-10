@@ -113,7 +113,12 @@ class _StartScreenState extends State<StartScreen> {
 
     if (result == null || result.trim().isEmpty) return;
 
-    await insertPlate(normalizePlate(result.trim()));
+    final addPlate = await insertPlate(normalizePlate(result.trim()));
+    if (addPlate == null) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(isPlateExist);
+      return;
+    }
     await _loadPlates();
   }
 
@@ -181,7 +186,7 @@ class _StartScreenState extends State<StartScreen> {
               onPressed: () {
                 _addCarPlate();
               },
-              iconButton: Icons.find_in_page,
+              iconButton: Icons.add,
             ),
           ),
         ],

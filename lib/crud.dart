@@ -1,10 +1,16 @@
 import 'package:app_633/constants.dart';
+import 'package:sqflite/sqflite.dart';
 
 import 'db_helper.dart';
 
-Future<int> insertPlate(String number) async {
-  final db = await DbHelper.instance.database;
-  return db.insert(table, {'number': number});
+Future<int?> insertPlate(String number) async {
+  try {
+    final db = await DbHelper.instance.database;
+    return await db.insert(table, {'number': number});
+  } on DatabaseException catch (e) {
+    if (e.isUniqueConstraintError()) return null;
+    rethrow;
+  }
 }
 
 Future<List<String>> getAllPlates() async {

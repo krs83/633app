@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+
 const dbName = 'plates_633.db';
 const table = 'plates_633';
 const appTitle = 'Номера 633';
@@ -7,3 +9,4 @@ const cancel = 'Отмена';
 const newPlate = 'Новый номер';
 const search = 'Поиск';
 const tablePadding = 10;
+const isPlateExist = SnackBar(content: Text('Такой номер уже есть!'));
