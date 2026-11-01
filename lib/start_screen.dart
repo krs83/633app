@@ -175,17 +175,6 @@ class _StartScreenState extends State<StartScreen> {
         ),
         body: Column(
           children: [
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: TextField(
-                onChanged: (v) => setState(() => _searchQuery = v),
-                decoration: const InputDecoration(
-                  hintText: search,
-                  prefixIcon: Icon(Icons.search),
-                  border: OutlineInputBorder(),
-                ),
-              ),
-            ),
             Expanded(
               child: ListView.separated(
                 itemCount: visible.length,
@@ -199,8 +188,20 @@ class _StartScreenState extends State<StartScreen> {
                     const Divider(height: 1),
               ),
             ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: TextField(
+                onChanged: (v) => setState(() => _searchQuery = v),
+                decoration: const InputDecoration(
+                  hintText: search,
+                  prefixIcon: Icon(Icons.search),
+                  border: OutlineInputBorder(),
+                ),
+              ),
+            ),
           ],
         ),
+        floatingActionButtonLocation: .startTop,
         floatingActionButton: Row(
           mainAxisAlignment: .end,
           children: [
